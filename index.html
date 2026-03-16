@@ -1,182 +1,81 @@
 <!DOCTYPE html>
-<html lang="kk">
+<html lang="kk" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alem Music - Әуен Әлемі</title>
+    <title>CivilBuild | Көпір Инженериясы</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        'sky-soft': '#87CEEB',
-                        'dark-spotify': '#121212',
-                        'error-red': '#FF4B2B'
+                        primary: '#0ea5e9',
+                        secondary: '#10b981',
                     }
                 }
             }
         }
     </script>
-    <style>
-        .page { display: none; min-height: 100vh; transition: all 0.3s ease; }
-        .active-page { display: block; }
-        .custom-scroll::-webkit-scrollbar { height: 4px; width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #87CEEB; border-radius: 10px; }
-        .logo-gradient { background: linear-gradient(135deg, #87CEEB 0%, #1e3a8a 100%); }
-    </style>
 </head>
-<body class="bg-black text-white font-sans selection:bg-sky-soft selection:text-black">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
-    <div id="welcomeScreen" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center transition-opacity duration-1000">
-        <div class="w-32 h-32 logo-gradient rounded-[2.5rem] flex items-center justify-center shadow-2xl animate-pulse shadow-sky-soft/20">
-            <svg viewBox="0 0 100 100" class="w-20 h-20 fill-black">
-                <path d="M50 10 L90 50 L50 90 L10 50 Z M50 30 L70 50 L50 70 L30 50 Z" />
-            </svg>
-        </div>
-        <h1 class="mt-8 text-4xl font-bold tracking-[0.4em] uppercase text-sky-soft">Alem</h1>
-    </div>
-
-    <div id="mainContent" class="hidden flex flex-col pb-24">
-        
-        <div id="homePage" class="page active-page px-6 pt-8">
-            <div class="flex justify-between items-center mb-10">
-                <h1 id="txt_home_title" class="text-3xl font-bold">Қайырлы күн</h1>
-                <div onclick="showPage('profilePage')" class="w-12 h-12 bg-gray-500 rounded-full border-2 border-sky-soft cursor-pointer overflow-hidden hover:scale-110 transition">
-                    <img id="pfp_small" src="https://ui-avatars.com/api/?name=User&background=87CEEB&color=000" class="w-full h-full object-cover">
-                </div>
-            </div>
-
-            <section class="mb-10">
-                <h2 id="txt_my_playlists" class="text-xl font-bold mb-4">Менің плейлисттерім</h2>
-                <div id="playlistScroll" class="flex gap-4 overflow-x-auto custom-scroll pb-4">
-                    </div>
-            </section>
-
-            <section class="mb-10">
-                <h2 id="txt_recommended" class="text-xl font-bold mb-4">Alem AI ұсыныстары</h2>
-                <div id="recommendedGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                    </div>
-            </section>
-
-            <section class="bg-gradient-to-br from-dark-spotify to-blue-900/30 p-6 rounded-3xl border border-sky-soft/20 mb-10">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2 bg-sky-soft rounded-lg text-black"><i class="fas fa-robot"></i></div>
-                    <h3 class="font-bold text-lg">Alem AI</h3>
-                </div>
-                <div class="bg-black/40 rounded-xl p-4 h-24 mb-4 text-sm text-gray-400 overflow-y-auto" id="aiChat">
-                    Музыка, артистер және топтар туралы кез келген ақпаратты сұраңыз...
-                </div>
-                <div class="flex gap-2">
-                    <input type="text" id="aiInput" placeholder="Сұрақ қою..." class="flex-grow bg-black border border-white/10 rounded-xl px-4 py-2 outline-none focus:border-sky-soft transition">
-                    <button onclick="sendToAI()" class="bg-sky-soft text-black px-4 py-2 rounded-xl font-bold"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </section>
-        </div>
-
-        <div id="searchPage" class="page px-6 pt-8">
-            <h1 id="txt_search_title" class="text-3xl font-bold mb-6">Іздеу</h1>
-            <div class="relative mb-8">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Әндер, альбомдар, артистер..." class="w-full bg-dark-spotify border border-white/5 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-sky-soft">
-            </div>
-            <div id="searchResults" class="grid gap-4">
-                </div>
-        </div>
-
-        <div id="profilePage" class="page">
-            <div class="h-64 bg-gradient-to-b from-sky-soft/20 to-black flex flex-col items-center justify-center pt-10">
-                <div class="w-32 h-32 rounded-full border-4 border-sky-soft overflow-hidden mb-4 shadow-2xl">
-                    <img id="pfp_large" src="https://ui-avatars.com/api/?name=User&size=256&background=87CEEB&color=000" class="w-full h-full">
-                </div>
-                <h2 class="text-3xl font-bold">Пайдаланушы</h2>
-                <div class="flex gap-8 mt-4 text-sm text-gray-400">
-                    <p><b class="text-white">1,240</b> Жазылушы</p>
-                    <p><b class="text-white">560</b> Жазылғандар</p>
-                </div>
-            </div>
-            <div class="p-6">
-                <h3 id="txt_profile_playlists" class="text-xl font-bold mb-6 border-b border-white/10 pb-2">Менің жинақтарым</h3>
-                <div id="profilePlaylistGrid" class="grid grid-cols-2 gap-4">
-                    </div>
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b dark:border-gray-700">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-emerald-500 bg-clip-text text-transparent">
+                CivilBuild
+            </h1>
+            <div class="flex items-center gap-4">
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:scale-110 transition">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
             </div>
         </div>
+    </nav>
 
-        <div id="settingsPage" class="page px-8 pt-10">
-            <h1 id="txt_settings_title" class="text-4xl font-bold mb-12">Баптаулар (Settings)</h1>
+    <header class="py-12 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-extrabold mb-4">Инженерлік Шешімдер Каталогы</h2>
+            <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">VectraBridge Pro жүйесіне арналған материалдар мен құрылымдардың толық тізімі.</p>
             
-            <div class="space-y-10">
-                <section>
-                    <h3 id="txt_lang_label" class="text-sky-soft font-bold uppercase text-xs tracking-widest mb-4">Тіл (Language)</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="changeLang('kk')" class="bg-dark-spotify p-4 rounded-xl border border-white/5 hover:border-sky-soft transition text-left">Қазақ</button>
-                        <button onclick="changeLang('en')" class="bg-dark-spotify p-4 rounded-xl border border-white/5 hover:border-sky-soft transition text-left">English</button>
-                        <button onclick="changeLang('ru')" class="bg-dark-spotify p-4 rounded-xl border border-white/5 hover:border-sky-soft transition text-left">Русский</button>
-                        <button onclick="changeLang('zh')" class="bg-dark-spotify p-4 rounded-xl border border-white/5 hover:border-sky-soft transition text-left">中文</button>
-                        <button onclick="changeLang('ja')" class="bg-dark-spotify p-4 rounded-xl border border-white/5 hover:border-sky-soft transition text-left">日本語</button>
-                    </div>
-                </section>
-
-                <section>
-                    <h3 id="txt_privacy_label" class="text-sky-soft font-bold uppercase text-xs tracking-widest mb-4">Құпиялылық (Privacy)</h3>
-                    <div class="bg-dark-spotify p-5 rounded-2xl flex justify-between items-center border border-white/5">
-                        <span id="txt_privacy_mode">Аккаунт түрі: Жариялы</span>
-                        <button onclick="togglePrivacy()" class="bg-sky-soft text-black px-4 py-1 rounded-full text-sm font-bold">Өзгерту</button>
-                    </div>
-                </section>
-
-                <section>
-                    <h3 id="txt_car_label" class="text-sky-soft font-bold uppercase text-xs tracking-widest mb-4">Көлік режимі (Car Mode)</h3>
-                    <button onclick="startCarMode()" class="w-full bg-dark-spotify p-6 rounded-2xl flex items-center gap-4 border border-white/5 hover:bg-blue-900/20 transition">
-                        <i class="fas fa-car text-3xl text-sky-soft"></i>
-                        <div class="text-left">
-                            <p class="font-bold">Bluetooth қосу</p>
-                            <p class="text-xs text-gray-500">Көлік динамиктеріне қосылу үшін</p>
-                        </div>
-                    </button>
-                </section>
+            <div class="mt-8 flex flex-col md:flex-row gap-4 justify-center">
+                <input type="text" id="searchInput" placeholder="Материал атын іздеу..." 
+                    class="px-6 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary outline-none w-full md:w-96">
+                <select id="categoryFilter" class="px-6 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 outline-none">
+                    <option value="all">Барлық санаттар</option>
+                    <option value="Материалдар">Материалдар</option>
+                    <option value="Құрылымдар">Құрылымдар</option>
+                    <option value="Құралдар">Құралдар</option>
+                </select>
             </div>
         </div>
+    </header>
 
-        <nav class="fixed bottom-0 left-0 right-0 h-20 bg-black/95 backdrop-blur-xl border-t border-white/5 flex items-center justify-around z-[90]">
-            <button onclick="showPage('homePage')" class="flex flex-col items-center gap-1 text-sky-soft transition" id="nav_home">
-                <i class="fas fa-home text-xl"></i>
-                <span class="text-[10px]">Басты</span>
-            </button>
-            <button onclick="showPage('searchPage')" class="flex flex-col items-center gap-1 text-gray-500 transition" id="nav_search">
-                <i class="fas fa-search text-xl"></i>
-                <span class="text-[10px]">Іздеу</span>
-            </button>
-            <button onclick="showPage('profilePage')" class="flex flex-col items-center gap-1 text-gray-500 transition" id="nav_profile">
-                <i class="fas fa-user text-xl"></i>
-                <span class="text-[10px]">Профиль</span>
-            </button>
-            <button onclick="showPage('settingsPage')" class="flex flex-col items-center gap-1 text-gray-500 transition" id="nav_settings">
-                <i class="fas fa-cog text-xl"></i>
-                <span class="text-[10px]">Баптаулар</span>
-            </button>
-        </nav>
+    <main class="container mx-auto px-4 py-12">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            </div>
+    </main>
 
-        <div id="playerBar" class="fixed bottom-24 left-4 right-4 bg-sky-soft text-black p-3 rounded-2xl flex items-center justify-between shadow-2xl hidden">
-            <div class="flex items-center gap-3">
-                <img id="playerImg" src="" class="w-10 h-10 rounded-lg object-cover">
-                <div>
-                    <p id="playerTitle" class="text-xs font-bold truncate w-32"></p>
-                    <p class="text-[10px] opacity-70">2:45 / 3:30</p>
-                </div>
-            </div>
-            <div class="flex gap-4 pr-2">
-                <i class="fas fa-heart"></i>
-                <i class="fas fa-pause"></i>
-            </div>
+    <div id="modal" class="fixed inset-0 z-[60] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+            <button id="closeModal" class="absolute top-4 right-4 text-2xl hover:rotate-90 transition">&times;</button>
+            <div id="modalContent" class="p-8"></div>
         </div>
-
     </div>
 
-    <div id="toast" class="fixed top-10 left-1/2 -translate-x-1/2 bg-sky-soft text-black px-6 py-3 rounded-full font-bold shadow-2xl opacity-0 pointer-events-none transition-all duration-500 z-[200]">
-        Хабарлама
+    <div id="toast" class="fixed bottom-8 right-8 transform translate-y-20 opacity-0 transition-all duration-500 z-[100]">
+        <div class="bg-emerald-500 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Сәтті орындалды!</span>
+        </div>
     </div>
+
+    <footer class="bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-8 text-center text-gray-500">
+        <p>&copy; 2026 CivilBuild Engineering. Барлық құқықтар қорғалған.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
